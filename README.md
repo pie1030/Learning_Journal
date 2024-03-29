@@ -5,11 +5,11 @@ As this is my first attempt to learn those intriguing CS courses by myself (actu
 ----
 ## Subject
 1. [Git](#jump1)
-2. [目录2](#jump2)
+2. [Machine Learning](#jump2)
 
 ---
 ### <span id="jump1">1. Git</span>
 
 ---
-### <span id="jump2">2. 目录2</span>
+### <span id="jump2">2. Machine Learning</span>
 
