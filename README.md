@@ -338,6 +338,99 @@ y = w1 * age + w2 * income + b
 所以`loss.backward()`是让PyTorch自动计算模型参数梯度的关键步骤,为优化模型参数做好准备。通过不断迭代这个过程,模型就能不断学习,使损失值最小化。
 
 
+## 作业二 前馈神经网络 Feedforward Neural Network 
+## 多层感知机 （MultiLayer Perceptron）
+
+### **Definition**
+
+Q: 为什么叫"前馈"？ 为什么叫"多层"？ 为什么叫"感知？<br>
+
+- 前馈神经网络由`输入层、隐藏层和输出层`组成。信息只沿着`一个方向`从输入层经过隐藏层向输出层传递，没有形成循环或反馈的路径，因此被称为"前馈"神经网络。
+- 感知机（Perpetron）是一个**二分类模型**，是最早的AI模型之一，它的求解算法等价于使用batch=1的梯度下降。But它无法拟合XOR函数，第一次AI寒冬~~
+- 多层感知机使用`隐藏层`和`激活函数`来获得`非线性`模型。
+    - 使用softmax来处理`多类`分类
+    - 超参数位`隐藏层数` & 各个`隐藏层大小`
+    - 多层感知机在perceptron基础上增加了一个（`单隐藏层`）或多个隐藏层。每个隐藏层都接受上层（如输入层或前一隐藏层）的输出作为其输入，并通过`一组权重和偏置`对输入进行处理，将处理后的信息传递给下一个隐藏层或输出层。这样层与层之间`相互"感知"`并`前馈处理`，因此被称为多层感知机。
+
+1. [torch.nn](https://pytorch.org/tutorials/beginner/nn_tutorial.html)
+	1. nn.Linear
+		1.1 `nn.Linear` 是 PyTorch 中最基本的全连接层。它对输入数据进行线性变换 `y = Wx + b`，其中 `W` 是权重矩阵, `b` 是偏置向量, 即将输入数据与权重矩阵相乘,并加上偏置向量。
+
+* 使用方法:
+```Python
+import torch.nn as nn
+# 定义全连接层
+linear = nn.Linear(in_features, out_features, bias=True)
+```
+
+- `in_features`: 输入特征的维度（即上一层的输出维度）。
+- `out_features`: 输出特征的维度。
+- `bias`: 布尔值,表示是否使用偏置项。默认为`True`。
+- `linear`会自动进行线性变换,并返回输出结果。 
+
+```python
+# 创建一个全连接层
+linear = nn.Linear(in_features=64, out_features=10)
+
+# 输入 x 的形状为 (batch_size, 64)
+x = torch.randn(32, 64)
+# 输出 x 的形状为 (batch_size, 10)
+output = linear(x)  
+```
+
+2. nn.MSELoss
+	
+- `nn.MSELoss` 实现了**均方误差**(Mean Squared Error)损失函数, 计算预测值和目标值之间的均方误差, 常用于回归问题。
+- 它的计算公式为 `(1/n) * Σ(y_pred - y_true)^2`，其中 `n` 是样本数量。
+
+- 使用实例：
+```python
+# 定义均方误差损失函数
+criterion = nn.MSELoss(reduction='mean')
+```
+
+- `reduction`: 指定损失函数的缩减方式。可选值包括`'none'`（不进行缩减）、`'mean'`（计算平均值）和`'sum'`（计算总和）。*默认为`'mean'`*。
+
+```python
+# 创建 MSE 损失函数
+criterion = nn.MSELoss()
+
+# 预测输出 y_pred 和真实标签 y_true
+y_pred = torch.randn(32, 1)
+y_true = torch.randn(32, 1)
+
+# 计算损失
+loss = criterion(y_pred, y_true)
+print(f"Loss: {loss.item()}")
+```
 
 
+2. torch.randn()是用于生成服从`标准正态分布`(均值为0，方差为1)的随机数的函数。
+3. torchvision.datasets.MNIST数据集。它包含了60,000个训练样本和10,000个测试样本,每个样本是一个28x28像素的灰度图像,表示一个手写数字(0-9)，是深度学习领域中的一个标准基准测试数据集。
 
+- 使用示例：
+
+```python
+from torchvision.datasets import CIFAR10
+
+# 下载并加载 CIFAR10 数据集
+train_dataset = CIFAR10(root='./data', train=True, download=True, transform=transforms.ToTensor())
+
+test_dataset = CIFAR10(root='./data', train=False, download=True, transform=transforms.ToTensor())
+```
+
+可以设置的主要参数包括:
+
+1. **`root`**: 数据集的存储路径。如果数据集不存在,会自动下载到该路径。
+    
+2. **`train`**: 是否加载训练集,默认为 `True`。
+    
+3. **`transform`**: 对图像数据进行的预处理变换操作。可以传入 `torchvision.transforms` 中定义的各种变换。
+    
+4. `target_transform`: 对标签数据进行的预处理变换操作。
+    
+5. **`download`**: 如果数据集不存在,是否自动下载。默认为 `False`。
+
+	3. nn.ReLU() 
+    - ReLU激活函数：Rectified Linear Unit
+    > ReLU(x) = max(x, 0) 让它从线性变成非线性-x=0处
