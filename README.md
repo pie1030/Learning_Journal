@@ -9,7 +9,3 @@ As this is my first attempt to learn those intriguing CS courses by myself (actu
 2. [Machine Learning](#jump2)
 
 ---
-### <span id="jump1">1. Git</span>
-
----
-### <span id="jump2">2. Machine Learning</span>
